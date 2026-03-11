@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <title id="title">Secure Login</title>
+        <link id="icon" rel="shortcut icon" href="../images/logo.svg" />
+        <link id="appleTouchIcon" rel="apple-touch-icon" href="../images/logo.svg" />
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta id="description" name="description" content="Secure login portal." />
+        <meta id="keywords" name="keywords" content="login, secure, conference" />
+
+        <meta property="og:type" content="{{OG_TYPE}}" />
+        <meta property="og:site_name" content="{{OG_SITE_NAME}}" />
+        <meta property="og:title" content="{{OG_TITLE}}" />
+        <meta property="og:description" content="{{OG_DESCRIPTION}}" />
+        <meta property="og:image" content="{{OG_IMAGE}}" />
+        <meta property="og:url" content="{{OG_URL}}" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+        <script async src="../js/Stats.js"></script>
+        <script defer src="../js/Brand.js"></script>
+        <script async src="../js/Translate.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/xss/dist/xss.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8"></script>
+
+        <style>
+            :root {
+                --bg:           #0f0f10;
+                --card:         #1a1a1c;
+                --ink:          #f1f1f1;
+                --ink-soft:     #b5b5b5;
+                --ink-muted:    #7a7a7a;
+                --border:       #2a2a2d;
+                --border-focus: #ffffff;
+                --radius:       12px;
+                --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+                --ff-serif:     'Instrument Serif', Georgia, serif;
+                --ff-sans:      'Outfit', sans-serif;
+            }
+
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+            html, body {
+                height: 100%;
+                background: var(--bg);
+                font-family: var(--ff-sans);
+                color: var(--ink);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* Subtle dot grid */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+                background-size: 28px 28px;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .page {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                width: 100%;
+                max-width: 420px;
+                padding: 52px 48px 48px;
+                box-shadow:
+                    0 1px 0 rgba(255,255,255,0.04) inset,
+                    0 8px 32px rgba(0,0,0,0.4),
+                    0 32px 64px rgba(0,0,0,0.3);
+                animation: cardIn 0.5s var(--ease) both;
+            }
+
+            @keyframes cardIn {
+                from { opacity: 0; transform: translateY(20px) scale(0.98); }
+                to   { opacity: 1; transform: translateY(0) scale(1); }
+            }
+
+            /* Logo */
+            .logo-wrap {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 40px;
+                animation: fadeUp 0.5s 0.1s var(--ease) both;
+            }
+
+            .logo-dot {
+                width: 10px;
+                height: 10px;
+                background: var(--ink);
+                border-radius: 50%;
+            }
+
+            .logo-name {
+                font-family: var(--ff-serif);
+                font-size: 17px;
+                letter-spacing: 0.2px;
+                color: var(--ink);
+            }
+
+            /* Headings */
+            .card-title {
+                font-family: var(--ff-serif);
+                font-size: 30px;
+                font-weight: 400;
+                line-height: 1.2;
+                color: var(--ink);
+                margin-bottom: 6px;
+                animation: fadeUp 0.5s 0.15s var(--ease) both;
+            }
+
+            .card-sub {
+                font-size: 14px;
+                color: var(--ink-soft);
+                margin-bottom: 32px;
+                font-weight: 300;
+                animation: fadeUp 0.5s 0.2s var(--ease) both;
+            }
+
+            /* Fields */
+            .field {
+                margin-bottom: 16px;
+                animation: fadeUp 0.5s var(--ease) both;
+            }
+            .field:nth-child(1) { animation-delay: 0.25s; }
+            .field:nth-child(2) { animation-delay: 0.32s; }
+
+            .field label {
+                display: block;
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0.7px;
+                text-transform: uppercase;
+                color: var(--ink-muted);
+                margin-bottom: 8px;
+            }
+
+            input.form-input,
+            select.form-select {
+                width: 100%;
+                background: rgba(255,255,255,0.04) !important;
+                border: 1px solid var(--border) !important;
+                border-radius: var(--radius) !important;
+                font-family: var(--ff-sans) !important;
+                font-size: 15px !important;
+                font-weight: 400 !important;
+                color: var(--ink) !important;
+                padding: 13px 16px !important;
+                outline: none !important;
+                transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease) !important;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
+            input.form-input::placeholder { color: var(--ink-muted) !important; }
+
+            input.form-input:focus,
+            select.form-select:focus {
+                border-color: var(--border-focus) !important;
+                background: rgba(255,255,255,0.07) !important;
+                box-shadow: 0 0 0 3px rgba(255,255,255,0.06) !important;
+            }
+
+            select.form-select {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%237a7a7a' d='M5 7L0 2h10z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 14px center !important;
+                cursor: pointer;
+            }
+
+            select.form-select option {
+                background: #1a1a1c;
+                color: var(--ink);
+            }
+
+            /* Primary button */
+            #loginButton,
+            #joinSelectRoomButton {
+                width: 100%;
+                background: var(--ink) !important;
+                color: #0f0f10 !important;
+                border: none !important;
+                border-radius: var(--radius) !important;
+                font-family: var(--ff-sans) !important;
+                font-size: 15px !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.2px !important;
+                padding: 14px !important;
+                cursor: pointer;
+                transition: background 0.2s var(--ease), transform 0.15s var(--ease), box-shadow 0.2s var(--ease) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                animation: fadeUp 0.5s 0.4s var(--ease) both;
+            }
+
+            #loginButton:hover,
+            #joinSelectRoomButton:hover {
+                background: #d8d8d8 !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 20px rgba(255,255,255,0.12) !important;
+            }
+
+            #loginButton:active,
+            #joinSelectRoomButton:active { transform: translateY(0) !important; }
+
+            /* Generate button */
+            #generateRoomButton {
+                flex-shrink: 0;
+                background: rgba(255,255,255,0.05) !important;
+                border: 1px solid var(--border) !important;
+                color: var(--ink) !important;
+                border-radius: var(--radius) !important;
+                padding: 14px 18px !important;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.25s var(--ease) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            #generateRoomButton:hover {
+                background: rgba(255,255,255,0.1) !important;
+                transform: rotate(90deg) !important;
+            }
+
+            .room-row {
+                display: flex;
+                gap: 10px;
+                align-items: stretch;
+                margin-top: 16px;
+            }
+
+            /* Footer note */
+            .card-footer-note {
+                text-align: center;
+                font-size: 12px;
+                color: var(--ink-muted);
+                margin-top: 24px;
+                font-weight: 300;
+                animation: fadeUp 0.5s 0.5s var(--ease) both;
+            }
+
+            /* Join room title */
+            .join-title {
+                font-family: var(--ff-serif);
+                font-size: 28px;
+                font-weight: 400;
+                color: var(--ink);
+                line-height: 1.25;
+                margin-bottom: 6px;
+            }
+
+            #joinRoomForm { display: none; }
+
+            #google_translate_element {
+                position: fixed;
+                top: 12px;
+                right: 16px;
+                z-index: 999;
+                opacity: 0.4;
+            }
+
+            @keyframes fadeUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+
+            @media (max-width: 480px) {
+                .card { padding: 36px 24px 32px; }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- <div id="google_translate_element"></div> -->
+
+        <div class="page">
+            <div class="card">
+
+                <!-- Logo -->
+                <div class="logo-wrap header-brand">
+                    <div class="logo-dot"></div>
+                    <span class="logo-name">Meet</span>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <h1 class="card-title">Sign in</h1>
+                    <p class="card-sub">Enter your credentials to continue</p>
+
+                    <div class="field">
+                        <label for="username">Username</label>
+                        <input
+                            id="username"
+                            class="form-input"
+                            type="name"
+                            placeholder="Your username"
+                            maxlength="254"
+                            required
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input
+                            id="password"
+                            class="form-input"
+                            type="password"
+                            placeholder="Your password"
+                            maxlength="36"
+                            required
+                        />
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <button id="loginButton" class="button button-primary button-block">
+                            Continue
+                        </button>
+                    </div>
+
+                    <p class="card-footer-note">Authorised users only</p>
+                </div>
+
+                <!-- Join Room Form -->
+                <div id="joinRoomForm" class="mb-12">
+                    <h2 class="join-title">Join a room</h2>
+                    <p class="card-sub">Select a room and get started</p>
+
+                    <div class="field" style="opacity:1; animation:none; margin-top:8px;">
+                        <label for="selectRoom">Room</label>
+                        <select id="selectRoom" class="form-select text-light bg-dark"></select>
+                    </div>
+
+                    <div class="room-row">
+                        <button id="generateRoomButton" class="button button-primary" title="Generate random room">
+                            <i class="fas fa-sync-alt" style="font-size:13px;"></i>
+                        </button>
+                        <button id="joinSelectRoomButton" class="button button-primary" style="flex:1;">
+                            Join Room
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script defer src="../js/Utils.js"></script>
+        <script defer src="../js/Login.js"></script>
+        <script defer src="../js/Landing.js"></script>
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+    </body>
+</html>

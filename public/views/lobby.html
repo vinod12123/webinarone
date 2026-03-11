@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <title id="title">Lobby</title>
+        <link id="icon" rel="shortcut icon" href="../images/logo.svg" />
+        <link id="appleTouchIcon" rel="apple-touch-icon" href="../images/logo.svg" />
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script defer src="../js/Brand.js"></script>
+
+        <style>
+            :root {
+                --bg:           #0f0f10;
+                --card:         #1a1a1c;
+                --ink:          #f1f1f1;
+                --ink-soft:     #b5b5b5;
+                --ink-muted:    #7a7a7a;
+                --border:       #2a2a2d;
+                --border-focus: #ffffff;
+                --radius:       12px;
+                --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+                --ff-serif:     'Instrument Serif', Georgia, serif;
+                --ff-sans:      'Outfit', sans-serif;
+            }
+
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+            html, body {
+                height: 100%;
+                background: var(--bg);
+                font-family: var(--ff-sans);
+                color: var(--ink);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+                background-size: 28px 28px;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .page {
+                position: relative;
+                z-index: 1;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+
+            .card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                width: 100%;
+                max-width: 420px;
+                padding: 52px 48px 48px;
+                text-align: center;
+                box-shadow:
+                    0 1px 0 rgba(255,255,255,0.04) inset,
+                    0 8px 32px rgba(0,0,0,0.4),
+                    0 32px 64px rgba(0,0,0,0.3);
+                animation: cardIn 0.5s var(--ease) both;
+            }
+
+            @keyframes cardIn {
+                from { opacity: 0; transform: translateY(20px) scale(0.98); }
+                to   { opacity: 1; transform: translateY(0) scale(1); }
+            }
+
+            /* Logo */
+            .logo-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 44px;
+                animation: fadeUp 0.5s 0.1s var(--ease) both;
+            }
+
+            .logo-dot {
+                width: 10px;
+                height: 10px;
+                background: var(--ink);
+                border-radius: 50%;
+            }
+
+            .logo-name {
+                font-family: var(--ff-serif);
+                font-size: 17px;
+                letter-spacing: 0.2px;
+                color: var(--ink);
+            }
+
+            /* Spinner */
+            .spinner-wrap {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 32px;
+                animation: fadeUp 0.5s 0.15s var(--ease) both;
+            }
+
+            .spinner-ring {
+                position: relative;
+                width: 52px;
+                height: 52px;
+            }
+
+            .spinner-ring::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                border: 2px solid var(--border);
+            }
+
+            .spinner-ring::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                border: 2px solid transparent;
+                border-top-color: var(--ink);
+                animation: spin 0.9s linear infinite;
+            }
+
+            @keyframes spin { to { transform: rotate(360deg); } }
+
+            /* Pulse dots */
+            .pulse-dots {
+                display: flex;
+                justify-content: center;
+                gap: 6px;
+                margin-bottom: 32px;
+                animation: fadeUp 0.5s 0.2s var(--ease) both;
+            }
+
+            .pulse-dots span {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--ink-muted);
+                animation: dotPulse 1.4s ease-in-out infinite both;
+            }
+
+            .pulse-dots span:nth-child(2) { animation-delay: 0.2s; }
+            .pulse-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+            @keyframes dotPulse {
+                0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+                40%           { opacity: 1;   transform: scale(1.1); }
+            }
+
+            /* Text */
+            .card-title {
+                font-family: var(--ff-serif);
+                font-size: 28px;
+                font-weight: 400;
+                color: var(--ink);
+                margin-bottom: 10px;
+                animation: fadeUp 0.5s 0.25s var(--ease) both;
+            }
+
+            .card-sub {
+                font-size: 14px;
+                color: var(--ink-soft);
+                font-weight: 300;
+                line-height: 1.65;
+                animation: fadeUp 0.5s 0.32s var(--ease) both;
+            }
+
+            /* Join button */
+            #cta { margin-top: 32px; animation: fadeUp 0.4s var(--ease) both; }
+
+            #joinBtn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                background: var(--ink);
+                color: #0f0f10;
+                border: none;
+                border-radius: var(--radius);
+                font-family: var(--ff-sans);
+                font-size: 15px;
+                font-weight: 600;
+                padding: 14px;
+                text-decoration: none;
+                cursor: pointer;
+                transition: background 0.2s var(--ease), transform 0.15s var(--ease), box-shadow 0.2s var(--ease);
+            }
+
+            #joinBtn:hover {
+                background: #d8d8d8;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 20px rgba(255,255,255,0.12);
+                color: #0f0f10;
+                text-decoration: none;
+            }
+
+            #joinBtn:active { transform: translateY(0); }
+
+            #google_translate_element {
+                position: fixed;
+                top: 12px;
+                right: 16px;
+                z-index: 999;
+                opacity: 0.4;
+            }
+
+            @keyframes fadeUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to   { opacity: 1; transform: translateY(0); }
+            }
+
+            @media (max-width: 480px) {
+                .card { padding: 36px 24px 32px; }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- <div id="google_translate_element"></div> -->
+
+        <div class="page">
+            <div class="card">
+
+                <div class="logo-wrap header-brand">
+                    <div class="logo-dot"></div>
+                    <span class="logo-name">Meet</span>
+                </div>
+
+                <div class="spinner-wrap">
+                    <div class="spinner-ring"></div>
+                </div>
+
+                <div class="pulse-dots">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <h1 class="card-title">Waiting for host</h1>
+                <p class="card-sub">
+                    The session hasn't started yet.<br />
+                    You'll be joined automatically when the host arrives.
+                </p>
+
+                <div id="cta" style="display:none;">
+                    <a id="joinBtn" class="button button-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Join Now
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="../js/lobby.js"></script>
+    </body>
+</html>

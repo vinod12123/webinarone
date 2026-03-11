@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <title>MiroTalk SFU – Join Room</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="../css/landing.css" />
+
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xss/dist/xss.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            font-family: "IBM Plex Sans", sans-serif;
+        }
+
+        /* Main Rectangle Container */
+        .cta-inner {
+            width: 800px;           /* Fixed width for rectangle feel */
+            max-width: 95vw;
+            padding: 40px;          /* Balanced padding */
+            border-radius: 12px;
+            background: #1e293b;    /* Dark slate background */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 2rem;
+            line-height: 1.2;
+            color: #f8fafc;
+        }
+
+        /* The Horizontal Action Row */
+        .form-group-desktop {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+        }
+
+        #roomName {
+            flex: 1;                /* Take up remaining space */
+            height: 50px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #334155;
+            color: white;
+            padding: 0 15px;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .button {
+            height: 50px;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        /* Recent Room Section - Fixed Positioning */
+        .last-room-container {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #lastRoom {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        #lastRoom:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .form-group-desktop {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cta-inner {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="cta section">
+        <div class="container">
+            <div class="cta-inner">
+
+                <h3 id="joinDescription" class="section-title">
+                    Pick a room name. <br>How about this one?
+                </h3>
+
+                <div class="form-group-desktop">
+                    <input
+                        id="roomName"
+                        type="text"
+                        maxlength="32"
+                        placeholder="Enter room name..."
+                    />
+
+                    <button id="genRoomButton" class="button button-primary fas fa-arrows-rotate" title="Refresh"></button>
+
+                    <button id="joinRoomButton" class="button button-primary">
+                        JOIN ROOM
+                    </button>
+
+                    <button id="customizeRoomButton" class="button button-secondary">
+                        CUSTOMIZE
+                    </button>
+                </div>
+
+                <div id="lastRoomContainer" class="last-room-container">
+                    <span>Recent:</span>
+                    <a id="lastRoom">None</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script defer src="../js/Utils.js"></script>
+    <script defer src="../js/Common.js"></script>
+    <script defer src="../js/Landing.js"></script>
+
+</body>
+</html>
